@@ -18,7 +18,7 @@
   <dependencies defaultconf="default->default">
 
     <!-- Pentaho -->
-    <dependency org="pentaho" name="pentaho-platform-extensions" rev="${project.revision}" changing="true">
+    <dependency org="pentaho" name="pentaho-platform-extensions" rev="${platform.revision}" changing="true">
 		<exclude org="pentaho-reporting-engine" module="pentaho-reporting-engine-classic-core-test" />
     </dependency>    
     <!-- Pentaho Commons  -->
@@ -254,7 +254,7 @@
     </dependency>
 
     <!--  Other archive resources -->
-    <dependency org="pentaho" name="pentaho-user-console-package" rev="${project.revision}" transitive="false" changing="true" />
+    <dependency org="pentaho" name="pentaho-user-console-package" rev="${platform.revision}" transitive="false" changing="true" />
 
     <!--  BigData dependencies -->
 
@@ -321,7 +321,7 @@
     <exclude org="cglib"  module="cglib" />
 
     <!--  Make sure we get the correct version of kettle and pentaho-metadata -->
-    <conflict org="pentaho-kettle" rev="${dependency.kettle.revision}" />
+    <override org="pentaho-kettle" rev="${dependency.kettle.revision}" />
     <conflict org="pentaho" module="pentaho-metadata" rev="${dependency.pentaho-metadata.revision}" />
     <conflict org="pentaho-reporting" rev="3.8-SNAPSHOT" />
 
