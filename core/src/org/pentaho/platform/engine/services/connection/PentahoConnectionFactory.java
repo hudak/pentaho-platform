@@ -23,6 +23,7 @@ import org.pentaho.platform.api.engine.ILogger;
 import org.pentaho.platform.api.engine.IPentahoSession;
 import org.pentaho.platform.api.engine.ObjectFactoryException;
 import org.pentaho.platform.engine.core.system.IPentahoLoggingConnection;
+import org.pentaho.platform.engine.core.system.PentahoSessionHolder;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
 import org.pentaho.platform.engine.services.messages.Messages;
 import org.pentaho.platform.util.logging.Logger;
@@ -109,7 +110,7 @@ public class PentahoConnectionFactory {
    * @return
    */
   public static IPentahoConnection getConnection( final String datasourceType, Properties properties,
-      final IPentahoSession session, final ILogger logger ) {
+      IPentahoSession session, final ILogger logger ) {
     /*
      * TODO - This is where the "connection factory" action occurs. Based on if the datasourceType, location,
      * username, or password have changed then we create a new one.
@@ -120,6 +121,14 @@ public class PentahoConnectionFactory {
       connection = PentahoSystem.getObjectFactory().get( IPentahoConnection.class, key, session );
       if ( connection instanceof IPentahoLoggingConnection ) {
         ( (IPentahoLoggingConnection) connection ).setLogger( logger );
+      }
+      if ( session == null ) {
+        session = PentahoSessionHolder.getSession();
+      }
+      for ( ConnectionEventHandler eventHandler : PentahoSystem.getAll( ConnectionEventHandler.class ) ) {
+        if( eventHandler.connect( connection, session, properties ) ){
+          return connection;
+        }
       }
       connection.setProperties( properties );
     } catch ( ObjectFactoryException e ) {
